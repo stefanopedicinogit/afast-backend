@@ -88,6 +88,41 @@ app.post('/save-result', async (req, res) => {
     }
 });
 
+app.post('/save-answers', async (req, res) => {
+    const {
+        enterprise_id,
+        domanda,
+        risposta,
+        categoria_predizione,
+        ok_ko
+    } = req.body;
+
+    try {
+        const connection = await connect();
+        const query = `
+      INSERT INTO risposte (
+        E_ID,
+        Domanda,
+        Risposta_fornita,
+        Categoria_Predizione,
+        OK_KO
+      ) VALUES (?, ?, ?, ?, ?)
+    `;
+        const result = await connection.execute(query, [
+            enterprise_id,
+            domanda,
+            risposta,
+            categoria_predizione,
+            ok_ko
+        ]);
+
+        res.json({ message: 'Result saved successfully' });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
