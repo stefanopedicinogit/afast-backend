@@ -1,18 +1,15 @@
 // db.js
-const mysql = require('mysql2/promise');
+const sqlite3 = require('sqlite3').verbose();
 
 const dbConfig = {
-  host: 'sql8.freesqldatabase.com',
-  database: 'sql8788291',
-  user: 'sql8788291',
-  password: 'bBdJriWPWv',
-  port: 3306,
+  host: 'libsql://afastdb-stefanopedicinogit.aws-eu-west-1.turso.io',
 };
 
 async function connect() {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    console.log('Connected to database!');
+    const connection = new sqlite3.Database({
+      uri: dbConfig.host,
+    });
     return connection;
   } catch (error) {
     console.error('Error connecting to database:', error);

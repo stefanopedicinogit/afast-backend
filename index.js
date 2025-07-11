@@ -12,7 +12,7 @@ const port = 8000;
 app.get('/get', async (req, res) => {
   try {
     const connection = await connect();
-    const result = await connection.execute('SELECT * FROM afast_results');
+    const result = await connection.all('SELECT * FROM afast_results');
 
     console.log(result[0]);
     const sum_credito_percentage = result[0].reduce((acc, current) => {
@@ -56,7 +56,7 @@ app.post('/login', async (req, res) => {
     const { enterprise_id } = req.body;
     try {
         const connection = await connect();
-        const result = await connection.execute('SELECT * FROM afast_results WHERE enterprise_id = ?', [enterprise_id]);
+        const result = await connection.all('SELECT * FROM afast_results WHERE enterprise_id = ?', [enterprise_id]);
 
         if (result[0].length > 0) {
             res.status(400).json({ error: 'Enterprise ID already existing' });
@@ -100,7 +100,7 @@ app.post('/save-result', async (req, res) => {
         risk_percentage
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-        const result = await connection.execute(query, [
+        const result = await connection.run(query, [
             enterprise_id,
             score,
             start_time,
@@ -140,7 +140,7 @@ app.post('/save-answers', async (req, res) => {
         OK_KO
       ) VALUES (?, ?, ?, ?, ?)
     `;
-        const result = await connection.execute(query, [
+        const result = await connection.run(query, [
             enterprise_id,
             domanda,
             risposta,
